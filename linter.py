@@ -10,9 +10,7 @@
 """This module exports the Stylelint plugin class."""
 
 import json
-import os
 import re
-import sublime
 
 from SublimeLinter.lint import NodeLinter
 
@@ -55,7 +53,7 @@ class Stylelint(NodeLinter):
         try:
             if output and not match:
                 data = json.loads(output)[0]
-        except:
+        except Exception:
             yield (match, 0, None, "Error", "", "Output json data error", None)
 
         if data and 'invalidOptionWarnings' in data:

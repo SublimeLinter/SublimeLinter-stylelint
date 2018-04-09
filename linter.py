@@ -6,9 +6,8 @@ from SublimeLinter.lint import NodeLinter
 
 class Stylelint(NodeLinter):
 
-    syntax = ('css', 'css3', 'sass', 'scss', 'postcss', 'less', 'sugarss', 'sss', 'vue')
     npm_name = 'stylelint'
-    cmd = ('stylelint', '--formatter', 'json', '--stdin', '--stdin-filename', '@')
+    cmd = 'stylelint --formatter json --stdin --stdin-filename ${file}'
 
     line_col_base = (1, 1)
 
@@ -17,9 +16,8 @@ class Stylelint(NodeLinter):
         re.MULTILINE
     )
 
-    selectors = {
-        'html': 'source.css.embedded.html',
-        'vue': 'source.css.embedded.html'
+    defaults = {
+        'selector': 'source.css - meta.attribute-with-value, source.less, source.sass, source.scss'  # noqa 501
     }
 
     def find_errors(self, output):

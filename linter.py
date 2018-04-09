@@ -1,7 +1,5 @@
 import json
-import os
 import re
-import sublime
 
 from SublimeLinter.lint import NodeLinter
 
@@ -40,7 +38,7 @@ class Stylelint(NodeLinter):
         try:
             if output and not match:
                 data = json.loads(output)[0]
-        except:
+        except Exception:
             yield (match, 0, None, "Error", "", "Output json data error", None)
 
         if data and 'invalidOptionWarnings' in data:
@@ -68,32 +66,3 @@ class Stylelint(NodeLinter):
                     yield (True, line, col, type, "", text, None)
 
         return super().find_errors(output)
-
-    def communicate(self, cmd, code=None):
-        """Run an external executable using stdin to pass code and return its output."""
-        if '__RELATIVE_TO_FOLDER__' in cmd:
-
-            relfilename = self.filename
-            window = self.view.window()
-
-            # can't get active folder, it will work only if there is one folder in project
-            if int(sublime.version()) >= 3080 and len(window.folders()) < 2:
-
-                vars = window.extract_variables()
-
-                if 'folder' in vars:
-                    relfilename = os.path.relpath(self.filename, vars['folder'])
-
-            cmd[cmd.index('__RELATIVE_TO_FOLDER__')] = relfilename
-
-        elif not code:
-
-            filename = self.filename
-            fileext = os.path.splitext(filename)
-
-            cmd.append(filename)
-
-            if fileext and not fileext[1:] in self.syntax:
-                cmd.extend('--syntax', 'css')
-
-        return super().communicate(cmd, code)

@@ -1,14 +1,3 @@
-#
-# linter.py
-# Linter for SublimeLinter3, a code checking framework for Sublime Text 3
-#
-# Written by @kungfusheep
-# Copyright (c) 2016 @kungfusheep
-#
-# License: MIT
-#
-"""This module exports the Stylelint plugin class."""
-
 import json
 import os
 import re
@@ -18,14 +7,10 @@ from SublimeLinter.lint import NodeLinter
 
 
 class Stylelint(NodeLinter):
-    """Provides an interface to stylelint."""
 
     syntax = ('css', 'css3', 'sass', 'scss', 'postcss', 'less', 'sugarss', 'sss', 'vue')
     npm_name = 'stylelint'
     cmd = ('stylelint', '--formatter', 'json', '--stdin', '--stdin-filename', '@')
-    version_args = '--version'
-    version_re = r'(?P<version>\d+\.\d+\.\d+)'
-    version_requirement = '>= 7.0.0'
 
     line_col_base = (1, 1)
 

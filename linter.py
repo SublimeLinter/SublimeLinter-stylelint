@@ -1,7 +1,9 @@
 import json
 import re
-
+import logging
 from SublimeLinter.lint import NodeLinter
+
+logger = logging.getLogger('SublimeLinter.plugin.stylelint')
 
 
 class Stylelint(NodeLinter):
@@ -24,31 +26,33 @@ class Stylelint(NodeLinter):
         """
         Parse errors from linter's output.
 
-        We override this method to handle parsing stylelint crashes.
+        We override this method to handle parsing stylelint crashes,
+        deprecations and other feedback about the config.
         """
         data = None
         match = self.crash_regex.match(output)
 
         if match:
             msg = "Stylelint crashed: %s" % match.group(1)
-            yield (match, 0, None, "Error", "", msg, None)
+            self.notify_failure()
+            yield (match, 0, None, "", "Warning", msg, None)
 
         try:
             if output and not match:
                 data = json.loads(output)[0]
         except Exception:
-            yield (match, 0, None, "Error", "", "Output json data error", None)
+            self.notify_failure()
 
         if data and 'invalidOptionWarnings' in data:
             for option in data['invalidOptionWarnings']:
+                self.notify_failure()
                 text = option['text']
-
-                yield (True, 0, None, "Error", "", text, None)
+                yield (True, 0, None, "", "Warning", text, None)
 
         if data and 'deprecations' in data:
             for option in data['deprecations']:
+                self.notify_failure()
                 text = option['text']
-
                 yield (True, 0, None, "", "Warning", text, None)
 
         if data and 'warnings' in data:

@@ -66,6 +66,6 @@ class Stylelint(NodeLinter):
                 text = warning['text']
 
                 if type == 'warning':
-                    yield (True, line, col, "", type, text, None)
+                    yield (warning, line, col, "", type, text, None)
                 else:
-                    yield (True, line, col, type, "", text, None)
+                    yield (warning, line, col, type, "", text, None)

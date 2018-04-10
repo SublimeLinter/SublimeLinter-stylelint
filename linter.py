@@ -45,16 +45,18 @@ class Stylelint(NodeLinter):
             self.notify_failure()
 
         if data and 'invalidOptionWarnings' in data:
-            for option in data['invalidOptionWarnings']:
-                text = option['text']
-                logger.warning(text)
+            if data['invalidOptionWarnings'] != []:
                 self.notify_failure()
+                for option in data['invalidOptionWarnings']:
+                    text = option['text']
+                    logger.warning(text)
 
         if data and 'deprecations' in data:
-            for option in data['deprecations']:
-                text = option['text']
-                logger.warning(text)
+            if data['deprecations'] != []:
                 self.notify_failure()
+                for option in data['deprecations']:
+                    text = option['text']
+                    logger.warning(text)
 
         if data and 'warnings' in data:
             for warning in data['warnings']:

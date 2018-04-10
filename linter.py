@@ -34,26 +34,27 @@ class Stylelint(NodeLinter):
 
         if match:
             msg = "Stylelint crashed: %s" % match.group(1)
+            logger.warning(msg)
             self.notify_failure()
-            yield (match, 0, None, "", "Warning", msg, None)
 
         try:
             if output and not match:
                 data = json.loads(output)[0]
-        except Exception:
+        except Exception as e:
+            logger.warning(e)
             self.notify_failure()
 
         if data and 'invalidOptionWarnings' in data:
             for option in data['invalidOptionWarnings']:
-                self.notify_failure()
                 text = option['text']
-                yield (True, 0, None, "", "Warning", text, None)
+                logger.warning(text)
+                self.notify_failure()
 
         if data and 'deprecations' in data:
             for option in data['deprecations']:
-                self.notify_failure()
                 text = option['text']
-                yield (True, 0, None, "", "Warning", text, None)
+                logger.warning(text)
+                self.notify_failure()
 
         if data and 'warnings' in data:
             for warning in data['warnings']:
@@ -66,5 +67,3 @@ class Stylelint(NodeLinter):
                     yield (True, line, col, "", type, text, None)
                 else:
                     yield (True, line, col, type, "", text, None)
-
-        return super().find_errors(output)

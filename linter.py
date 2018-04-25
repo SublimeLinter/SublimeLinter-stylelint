@@ -1,7 +1,9 @@
 import json
 import re
-
+import logging
 from SublimeLinter.lint import NodeLinter
+
+logger = logging.getLogger('SublimeLinter.plugin.stylelint')
 
 
 class Stylelint(NodeLinter):
@@ -24,32 +26,37 @@ class Stylelint(NodeLinter):
         """
         Parse errors from linter's output.
 
-        We override this method to handle parsing stylelint crashes.
+        We override this method to handle parsing stylelint crashes,
+        deprecations and other feedback about the config.
         """
         data = None
         match = self.crash_regex.match(output)
 
         if match:
             msg = "Stylelint crashed: %s" % match.group(1)
-            yield (match, 0, None, "Error", "", msg, None)
+            logger.warning(msg)
+            self.notify_failure()
 
         try:
             if output and not match:
                 data = json.loads(output)[0]
-        except Exception:
-            yield (match, 0, None, "Error", "", "Output json data error", None)
+        except Exception as e:
+            logger.warning(e)
+            self.notify_failure()
 
         if data and 'invalidOptionWarnings' in data:
-            for option in data['invalidOptionWarnings']:
-                text = option['text']
-
-                yield (True, 0, None, "Error", "", text, None)
+            if data['invalidOptionWarnings'] != []:
+                self.notify_failure()
+                for option in data['invalidOptionWarnings']:
+                    text = option['text']
+                    logger.warning(text)
 
         if data and 'deprecations' in data:
-            for option in data['deprecations']:
-                text = option['text']
-
-                yield (True, 0, None, "", "Warning", text, None)
+            if data['deprecations'] != []:
+                self.notify_failure()
+                for option in data['deprecations']:
+                    text = option['text']
+                    logger.warning(text)
 
         if data and 'warnings' in data:
             for warning in data['warnings']:
@@ -59,8 +66,6 @@ class Stylelint(NodeLinter):
                 text = warning['text']
 
                 if type == 'warning':
-                    yield (True, line, col, "", type, text, None)
+                    yield (warning, line, col, "", type, text, None)
                 else:
-                    yield (True, line, col, type, "", text, None)
-
-        return super().find_errors(output)
+                    yield (warning, line, col, type, "", text, None)

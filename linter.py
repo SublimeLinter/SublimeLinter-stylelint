@@ -19,7 +19,7 @@ class Stylelint(NodeLinter):
     )
 
     defaults = {
-        'selector': 'source.css - meta.attribute-with-value, source.less, source.sass, source.scss'  # noqa 501
+        'selector': 'source.css - meta.attribute-with-value, source.sass, source.scss'  # noqa 501
     }
 
     def find_errors(self, output):

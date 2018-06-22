@@ -9,7 +9,7 @@ logger = logging.getLogger('SublimeLinter.plugin.stylelint')
 class Stylelint(NodeLinter):
 
     npm_name = 'stylelint'
-    cmd = 'stylelint --formatter json --stdin --stdin-filename ${file}'
+    cmd = 'stylelint --formatter json --stdin-filename ${file}'
 
     line_col_base = (1, 1)
 

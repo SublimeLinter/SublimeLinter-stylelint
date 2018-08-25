@@ -5,7 +5,7 @@ This linter plugin for [SublimeLinter](https://github.com/SublimeLinter/SublimeL
 
 
 ## Installation
-SublimeLinter 3 must be installed in order to use this plugin. 
+SublimeLinter must be installed in order to use this plugin. 
 
 Please install via [Package Control](https://packagecontrol.io).
 

@@ -62,10 +62,8 @@ class Stylelint(NodeLinter):
             for warning in data['warnings']:
                 line = warning['line'] - self.line_col_base[0]
                 col = warning['column'] - self.line_col_base[1]
-                type = warning['severity']
-                text = warning['text']
+                severity = warning['severity']
+                rule = warning['rule']
+                text = warning['text'].replace('(' + rule + ')', '')
 
-                if type == 'warning':
-                    yield (warning, line, col, "", type, text, None)
-                else:
-                    yield (warning, line, col, type, "", text, None)
+                yield (warning, line, col, rule, severity, text, None)

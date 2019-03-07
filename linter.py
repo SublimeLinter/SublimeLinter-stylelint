@@ -2,6 +2,7 @@ import json
 import re
 import logging
 from SublimeLinter.lint import NodeLinter
+from SublimeLinter.lint.linter import LintMatch
 
 logger = logging.getLogger('SublimeLinter.plugin.stylelint')
 
@@ -62,8 +63,14 @@ class Stylelint(NodeLinter):
             for warning in data['warnings']:
                 line = warning['line'] - self.line_col_base[0]
                 col = warning['column'] - self.line_col_base[1]
-                severity = warning['severity']
-                rule = warning['rule']
-                text = warning['text'].replace('(' + rule + ')', '')
+                text = warning['text'].replace('(' + warning['rule'] + ')', '')
+                text = text.rstrip()
 
-                yield (warning, line, col, rule, severity, text, None)
+                yield LintMatch(
+                    match=warning,
+                    line=line,
+                    col=col,
+                    error_type=warning['severity'],
+                    code=warning['rule'],
+                    message=text
+                )

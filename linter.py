@@ -8,17 +8,12 @@ logger = logging.getLogger('SublimeLinter.plugin.stylelint')
 
 
 class Stylelint(NodeLinter):
-
-    npm_name = 'stylelint'
     cmd = 'stylelint --formatter json --stdin-filename ${file}'
-
     line_col_base = (1, 1)
-
     crash_regex = re.compile(
         r'^.*?\r?\n?\w*Error: (.*)',
         re.MULTILINE
     )
-
     defaults = {
         'selector': 'source.css - meta.attribute-with-value, source.sass, source.scss, source.less, source.sss'  # noqa 501
     }

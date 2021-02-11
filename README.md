@@ -24,4 +24,4 @@ Before using this plugin, ensure that `stylelint` is installed on your system. T
 - SublimeLinter settings: http://sublimelinter.com/en/latest/settings.html
 - Linter settings: http://sublimelinter.com/en/latest/linter_settings.html
 
-stylelint for SublimeLinter will use your regular [stylelint configuration files](https://stylelint.io/user-guide/#configuration).
+stylelint for SublimeLinter will use your regular [stylelint configuration files](https://stylelint.io/user-guide/configure).

@@ -58,6 +58,8 @@ class Stylelint(NodeLinter):
             for warning in data['warnings']:
                 line = warning['line'] - self.line_col_base[0]
                 col = warning['column'] - self.line_col_base[1]
+                end_line = warning['endLine'] - self.line_col_base[0] if 'endLine' in warning else None
+                end_col = warning['endColumn'] - self.line_col_base[1] if 'endColumn' in warning else None
                 text = warning['text'].replace('(' + warning['rule'] + ')', '')
                 text = text.rstrip()
 
@@ -65,6 +67,8 @@ class Stylelint(NodeLinter):
                     match=warning,
                     line=line,
                     col=col,
+                    end_line=end_line,
+                    end_col=end_col,
                     error_type=warning['severity'],
                     code=warning['rule'],
                     message=text

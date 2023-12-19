@@ -2,6 +2,7 @@ import json
 import re
 import logging
 from SublimeLinter.lint import NodeLinter
+from SublimeLinter.lint import util
 from SublimeLinter.lint.linter import LintMatch
 
 logger = logging.getLogger('SublimeLinter.plugin.stylelint')
@@ -9,6 +10,8 @@ logger = logging.getLogger('SublimeLinter.plugin.stylelint')
 
 class Stylelint(NodeLinter):
     cmd = 'stylelint --formatter json --stdin-filename ${file}'
+    on_stderr = None
+    error_stream = util.STREAM_BOTH
     line_col_base = (1, 1)
     crash_regex = re.compile(
         r'^.*?\r?\n?\w*Error: (.*)',

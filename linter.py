@@ -9,6 +9,7 @@ logger = logging.getLogger('SublimeLinter.plugin.stylelint')
 
 
 class Stylelint(NodeLinter):
+    column_unit = 'utf16'
     cmd = 'stylelint --formatter json --stdin-filename ${file}'
     on_stderr = None
     error_stream = util.STREAM_BOTH
